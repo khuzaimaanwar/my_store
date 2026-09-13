@@ -1,0 +1,129 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Entity validation helpers
+    function isValidUser(data, userId) {
+      return data.id is string && data.id == userId &&
+        data.email is string && data.email.size() <= 150 &&
+        data.fullName is string && data.fullName.size() <= 100 &&
+        data.shopName is string && data.shopName.size() <= 100 &&
+        (!('phone' in data) || (data.phone is string && data.phone.size() <= 30)) &&
+        (!('address' in data) || (data.address is string && data.address.size() <= 250)) &&
+        data.createdAt is string && data.createdAt.size() <= 50;
+    }
+
+    function isValidProduct(data, userId) {
+      return data.id is string && isValidId(data.id) &&
+        data.userId is string && data.userId == userId && data.userId == request.auth.uid &&
+        data.name is string && data.name.size() > 0 && data.name.size() <= 120 &&
+        data.category is string && data.category.size() <= 50 &&
+        data.quantity is number && data.quantity >= 0 &&
+        data.purchasePrice is number && data.purchasePrice >= 0 &&
+        data.sellingPrice is number && data.sellingPrice >= 0 &&
+        data.lowStockThreshold is number && data.lowStockThreshold >= 0 &&
+        (!('brand' in data) || (data.brand is string && data.brand.size() <= 80)) &&
+        (!('partNumber' in data) || (data.partNumber is string && data.partNumber.size() <= 80)) &&
+        data.createdAt is string && data.createdAt.size() <= 50 &&
+        data.updatedAt is string && data.updatedAt.size() <= 50;
+    }
+
+    function isValidSale(data, userId) {
+      return data.id is string && isValidId(data.id) &&
+        data.userId is string && data.userId == userId && data.userId == request.auth.uid &&
+        data.invoiceNumber is string && data.invoiceNumber.size() <= 50 &&
+        data.productId is string && isValidId(data.productId) &&
+        data.productName is string && data.productName.size() <= 120 &&
+        data.category is string && data.category.size() <= 50 &&
+        data.quantity is number && data.quantity > 0 &&
+        data.purchasePrice is number && data.purchasePrice >= 0 &&
+        data.sellingPrice is number && data.sellingPrice >= 0 &&
+        data.totalAmount is number && data.totalAmount >= 0 &&
+        data.profit is number &&
+        data.customerName is string && data.customerName.size() <= 100 &&
+        (!('customerPhone' in data) || (data.customerPhone is string && data.customerPhone.size() <= 30)) &&
+        (!('productBrand' in data) || (data.productBrand is string && data.productBrand.size() <= 80)) &&
+        (!('notes' in data) || (data.notes is string && data.notes.size() <= 500)) &&
+        data.date is string && data.date.size() <= 50;
+    }
+
+    function isValidCustomer(data, userId) {
+      return data.id is string && isValidId(data.id) &&
+        data.userId is string && data.userId == userId && data.userId == request.auth.uid &&
+        data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+        (!('phone' in data) || (data.phone is string && data.phone.size() <= 30)) &&
+        (!('address' in data) || (data.address is string && data.address.size() <= 250)) &&
+        data.createdAt is string && data.createdAt.size() <= 50;
+    }
+
+    // Default deny all unknown collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // User Profile Document
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUser(incoming(), userId);
+      allow update: if isOwner(userId) && isValidUser(incoming(), userId) &&
+                    incoming().id == existing().id &&
+                    incoming().createdAt == existing().createdAt;
+      allow delete: if isOwner(userId);
+
+      // User Products Subcollection
+      match /products/{productId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(productId) && productId == incoming().id && isValidProduct(incoming(), userId);
+        allow update: if isOwner(userId) && isValidId(productId) &&
+                      incoming().id == existing().id &&
+                      incoming().userId == existing().userId &&
+                      isValidProduct(incoming(), userId);
+        allow delete: if isOwner(userId) && isValidId(productId);
+      }
+
+      // User Sales Subcollection
+      match /sales/{saleId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(saleId) && saleId == incoming().id && isValidSale(incoming(), userId);
+        allow update: if isOwner(userId) && isValidId(saleId) &&
+                      incoming().id == existing().id &&
+                      incoming().userId == existing().userId &&
+                      isValidSale(incoming(), userId);
+        allow delete: if isOwner(userId) && isValidId(saleId);
+      }
+
+      // User Customers Subcollection
+      match /customers/{customerId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(customerId) && customerId == incoming().id && isValidCustomer(incoming(), userId);
+        allow update: if isOwner(userId) && isValidId(customerId) &&
+                      incoming().id == existing().id &&
+                      incoming().userId == existing().userId &&
+                      isValidCustomer(incoming(), userId);
+        allow delete: if isOwner(userId) && isValidId(customerId);
+      }
+    }
+  }
+}

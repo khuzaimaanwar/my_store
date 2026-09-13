@@ -1,0 +1,7 @@
+{
+  "name": "AutoStock Pro",
+  "description": "Inventory and sales management system for auto spare parts shops with multi-user isolation, real-time stock tracking, and sales analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

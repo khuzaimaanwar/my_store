@@ -1,0 +1,97 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Auto spare parts store owner and shop profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "fullName": { "type": "string", "maxLength": 100 },
+        "shopName": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 150 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "address": { "type": "string", "maxLength": 250 },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "updatedAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "fullName", "shopName", "email", "createdAt"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Auto spare part item in shop inventory",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 120 },
+        "brand": { "type": "string", "maxLength": 80 },
+        "category": { "type": "string", "maxLength": 50 },
+        "quantity": { "type": "number" },
+        "purchasePrice": { "type": "number" },
+        "sellingPrice": { "type": "number" },
+        "lowStockThreshold": { "type": "number" },
+        "partNumber": { "type": "string", "maxLength": 80 },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "updatedAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "userId", "name", "category", "quantity", "purchasePrice", "sellingPrice", "lowStockThreshold", "createdAt", "updatedAt"]
+    },
+    "Sale": {
+      "title": "Sale",
+      "description": "Sales invoice and inventory transaction record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "invoiceNumber": { "type": "string", "maxLength": 50 },
+        "productId": { "type": "string", "maxLength": 128 },
+        "productName": { "type": "string", "maxLength": 120 },
+        "productBrand": { "type": "string", "maxLength": 80 },
+        "category": { "type": "string", "maxLength": 50 },
+        "quantity": { "type": "number" },
+        "purchasePrice": { "type": "number" },
+        "sellingPrice": { "type": "number" },
+        "totalAmount": { "type": "number" },
+        "profit": { "type": "number" },
+        "customerName": { "type": "string", "maxLength": 100 },
+        "customerPhone": { "type": "string", "maxLength": 30 },
+        "date": { "type": "string", "maxLength": 50 },
+        "notes": { "type": "string", "maxLength": 500 }
+      },
+      "required": ["id", "userId", "invoiceNumber", "productId", "productName", "category", "quantity", "purchasePrice", "sellingPrice", "totalAmount", "profit", "customerName", "date"]
+    },
+    "Customer": {
+      "title": "Customer",
+      "description": "Customer contact and order history profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "address": { "type": "string", "maxLength": 250 },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "updatedAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "userId", "name", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile and shop settings"
+    },
+    "/users/{userId}/products/{productId}": {
+      "schema": "Product",
+      "description": "Auto spare parts inventory items owned by this shop user"
+    },
+    "/users/{userId}/sales/{saleId}": {
+      "schema": "Sale",
+      "description": "Sales and invoice transactions created by this shop user"
+    },
+    "/users/{userId}/customers/{customerId}": {
+      "schema": "Customer",
+      "description": "Customer contacts and buying records for this shop"
+    }
+  }
+}
