@@ -56,10 +56,10 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({ sale, shopUser, onCl
                 Official Receipt
               </span>
               <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-0.5">
-                {shopUser?.shopName || 'Auto Spare Parts Shop'}
+                {shopUser?.shopName || 'Your Store'}
               </h1>
               <p className="text-xs text-slate-500 mt-1">
-                {shopUser?.address || 'Auto Spare Parts Wholesale & Retail'}
+                {shopUser?.address || 'Retail & Wholesale Store'}
               </p>
               {shopUser?.phone && (
                 <p className="text-xs text-slate-500">Contact: {shopUser.phone}</p>
@@ -162,7 +162,7 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({ sale, shopUser, onCl
             </p>
             <div className="flex items-center justify-center gap-1 mt-2 text-[10px] text-slate-400">
               <ShieldCheck className="w-3 h-3 text-emerald-600" />
-              <span>Generated securely via AutoStock Pro</span>
+              <span>Generated securely via StockPro</span>
             </div>
           </div>
         </div>

@@ -150,7 +150,7 @@ export const CustomersView: React.FC<CustomersViewProps> = ({ sales, user, onVie
 
                   <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
                     <span className="truncate max-w-[280px]">
-                      Parts bought: {cust.itemsPurchased.slice(0, 3).join(', ')}
+                      Items bought: {cust.itemsPurchased.slice(0, 3).join(', ')}
                       {cust.itemsPurchased.length > 3 ? '...' : ''}
                     </span>
                     <span className="text-emerald-700 font-semibold flex items-center gap-0.5 flex-shrink-0">

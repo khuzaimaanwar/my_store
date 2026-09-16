@@ -162,8 +162,8 @@ export const FirebaseService = {
       // If document doesn't exist yet, construct profile
       const fallbackUser: User = {
         id: fbUser.uid,
-        fullName: fbUser.displayName || 'Shop Owner',
-        shopName: 'Auto Parts Store',
+        fullName: fbUser.displayName || 'Store Owner',
+        shopName: fbUser.displayName ? `${fbUser.displayName}'s Store` : 'My Store',
         email: fbUser.email || normalizedEmail,
         createdAt: new Date().toISOString(),
       };
@@ -201,7 +201,7 @@ export const FirebaseService = {
       const newUser: User = {
         id: fbUser.uid,
         fullName: fbUser.displayName || 'Store Owner',
-        shopName: 'Auto Parts Store',
+        shopName: fbUser.displayName ? `${fbUser.displayName}'s Store` : 'My Store',
         email: fbUser.email || '',
         createdAt: new Date().toISOString(),
         phone: '',

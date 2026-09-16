@@ -89,7 +89,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ user, products, sales 
         <div className="border-b border-slate-200 pb-4 mb-6 flex justify-between items-start">
           <div>
             <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">
-              AutoStock Pro Report
+              StockPro Financial Report
             </span>
             <h2 className="text-2xl font-black text-slate-900 mt-1">{user.shopName}</h2>
             <p className="text-xs text-slate-500">Shop Owner: {user.fullName} • Currency: PKR (Rs)</p>
@@ -119,7 +119,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ user, products, sales 
             <span className="text-xl font-black text-slate-700 mt-1 block">
               {formatCurrency(totalCost)}
             </span>
-            <span className="text-[10px] text-slate-400">Inventory cost of sold parts</span>
+            <span className="text-[10px] text-slate-400">Inventory cost of sold products</span>
           </div>
 
           <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200">

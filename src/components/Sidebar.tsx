@@ -114,7 +114,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <span>Low Stock Warning</span>
             </div>
             <p className="text-[11px] text-amber-700 mt-1">
-              {lowStockCount} {lowStockCount === 1 ? 'part is' : 'parts are'} running below
+              {lowStockCount} {lowStockCount === 1 ? 'item is' : 'items are'} running below
               threshold!
             </p>
           </div>

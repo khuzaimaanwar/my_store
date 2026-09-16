@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { User } from '../types';
 import { StorageService } from '../services/storage';
 import {
-  Wrench,
+  Boxes,
   Store,
   LogOut,
   User as UserIcon,
@@ -45,13 +45,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="flex items-center gap-3 sm:gap-6 min-w-0">
               <div className="flex items-center gap-2 flex-shrink-0">
                 <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-sm ring-2 ring-slate-100">
-                  <Wrench className="w-5 h-5 text-emerald-400" />
+                  <Boxes className="w-5 h-5 text-emerald-400" />
                 </div>
                 <div className="hidden sm:block">
                   <div className="font-extrabold text-slate-900 tracking-tight text-sm leading-tight flex items-center gap-1.5">
-                    AutoStock <span className="text-emerald-600 font-black">PRO</span>
+                    StockPro <span className="text-emerald-600 font-black">POS</span>
                   </div>
-                  <div className="text-[10px] text-slate-400 font-medium">Spare Parts POS</div>
+                  <div className="text-[10px] text-slate-400 font-medium">Inventory & POS System</div>
                 </div>
               </div>
 
@@ -89,8 +89,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer"
               >
                 <PlusCircle className="w-3.5 h-3.5 text-slate-600" />
-                <span className="hidden sm:inline">Add Part</span>
-                <span className="sm:hidden">Part</span>
+                <span className="hidden sm:inline">Add Product</span>
+                <span className="sm:hidden">Product</span>
               </button>
 
               {/* Quick Record Sale Button */}

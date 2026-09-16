@@ -115,13 +115,13 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-            <span>Parts Inventory</span>
+            <span>Product Inventory</span>
             <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-700">
               {products.length} Products
             </span>
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Manage spare parts stock, cost prices, selling rates, and low stock warnings.
+            Manage product stock, cost prices, selling rates, and low stock warnings.
           </p>
         </div>
 
@@ -146,7 +146,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search by part name, brand (e.g. Bosch), or OEM number..."
+              placeholder="Search by product name, brand/supplier, or SKU code..."
               className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white"
             />
           </div>
@@ -193,7 +193,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
           >
             All Categories ({products.length})
           </button>
-          {CATEGORIES.map((cat) => {
+          {Array.from(new Set([...CATEGORIES, ...products.map((p) => p.category)])).map((cat) => {
             const count = products.filter((p) => p.category === cat).length;
             if (count === 0 && selectedCategory !== cat) return null;
             return (
@@ -240,9 +240,9 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
             <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 mx-auto flex items-center justify-center mb-3">
               <Search className="w-6 h-6" />
             </div>
-            <h3 className="text-sm font-bold text-slate-800">No spare parts found</h3>
+            <h3 className="text-sm font-bold text-slate-800">No products found</h3>
             <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-              No spare parts match your current search or filter criteria.
+              No products match your current search or filter criteria.
             </p>
             <button
               onClick={() => {
@@ -460,7 +460,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
             <div className="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-4">
               <Trash2 className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-slate-900">Delete Spare Part?</h3>
+            <h3 className="text-base font-bold text-slate-900">Delete Product?</h3>
             <p className="text-xs text-slate-500 mt-2">
               Are you sure you want to remove{' '}
               <strong className="text-slate-800">{deletingProduct.name}</strong> from your
@@ -482,7 +482,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                 }}
                 className="px-4 py-2 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-xl shadow-sm cursor-pointer"
               >
-                Yes, Delete Part
+                Yes, Delete Product
               </button>
             </div>
           </div>

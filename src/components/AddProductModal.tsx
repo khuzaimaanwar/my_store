@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Product, CategoryType, CATEGORIES } from '../types';
+import { Product, CategoryType, DEFAULT_CATEGORIES } from '../types';
 import { formatCurrency } from '../utils/formatters';
-import { Boxes, X, AlertTriangle, Percent, Sparkles, Check } from 'lucide-react';
+import { Boxes, X, AlertTriangle, Percent, Plus } from 'lucide-react';
 
 interface AddProductModalProps {
   isOpen: boolean;
@@ -19,38 +19,6 @@ interface AddProductModalProps {
   productToEdit?: Product | null;
 }
 
-// Popular quick presets for Pakistani auto spare parts shops
-const POPULAR_PART_PRESETS: Array<{
-  name: string;
-  category: CategoryType;
-  typicalBrand?: string;
-  typicalCost?: number;
-  typicalSell?: number;
-}> = [
-  { name: 'Oil Filter', category: 'Filters', typicalBrand: 'Guard', typicalCost: 850, typicalSell: 1200 },
-  { name: 'Air Filter', category: 'Filters', typicalBrand: 'Guard', typicalCost: 1100, typicalSell: 1500 },
-  { name: 'Front Brake Pads Set', category: 'Brakes', typicalBrand: 'MK Kashiyama', typicalCost: 3500, typicalSell: 4800 },
-  { name: 'Rear Brake Shoes', category: 'Brakes', typicalBrand: 'Asahi', typicalCost: 2800, typicalSell: 3900 },
-  { name: 'Spark Plugs (Set of 4)', category: 'Electrical', typicalBrand: 'NGK', typicalCost: 2400, typicalSell: 3400 },
-  { name: 'Alternator Fan Belt', category: 'Engine', typicalBrand: 'Bando', typicalCost: 1400, typicalSell: 2100 },
-  { name: 'Clutch Disc Plate', category: 'Transmission', typicalBrand: 'AISIN', typicalCost: 8500, typicalSell: 11500 },
-  { name: 'Front Shock Absorber', category: 'Suspension', typicalBrand: 'KYB', typicalCost: 9500, typicalSell: 13000 },
-  { name: 'Fuel Filter', category: 'Filters', typicalBrand: 'Toyota Genuine', typicalCost: 1800, typicalSell: 2600 },
-  { name: 'Headlight Halogen Bulb H4', category: 'Electrical', typicalBrand: 'Osram', typicalCost: 650, typicalSell: 950 },
-];
-
-const QUICK_BRANDS = [
-  'Toyota Genuine',
-  'Honda Genuine',
-  'Suzuki Genuine',
-  'Bosch',
-  'Denso',
-  'Guard',
-  'NGK',
-  'MK Kashiyama',
-  'AISIN',
-];
-
 export const AddProductModal: React.FC<AddProductModalProps> = ({
   isOpen,
   onClose,
@@ -59,7 +27,9 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
 }) => {
   const [name, setName] = useState('');
   const [brand, setBrand] = useState('');
-  const [category, setCategory] = useState<CategoryType>('Engine');
+  const [category, setCategory] = useState<CategoryType>('General');
+  const [isCustomCategory, setIsCustomCategory] = useState(false);
+  const [customCategoryText, setCustomCategoryText] = useState('');
   const [quantity, setQuantity] = useState('');
   const [purchasePrice, setPurchasePrice] = useState('');
   const [sellingPrice, setSellingPrice] = useState('');
@@ -73,7 +43,16 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
       if (productToEdit) {
         setName(productToEdit.name);
         setBrand(productToEdit.brand || '');
-        setCategory(productToEdit.category);
+        const isStandard = DEFAULT_CATEGORIES.includes(productToEdit.category);
+        if (isStandard) {
+          setCategory(productToEdit.category);
+          setIsCustomCategory(false);
+          setCustomCategoryText('');
+        } else {
+          setCategory('Other');
+          setIsCustomCategory(true);
+          setCustomCategoryText(productToEdit.category);
+        }
         setQuantity(String(productToEdit.quantity));
         setPurchasePrice(String(productToEdit.purchasePrice));
         setSellingPrice(String(productToEdit.sellingPrice));
@@ -82,7 +61,9 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
       } else {
         setName('');
         setBrand('');
-        setCategory('Engine');
+        setCategory('General');
+        setIsCustomCategory(false);
+        setCustomCategoryText('');
         setQuantity('');
         setPurchasePrice('');
         setSellingPrice('');
@@ -106,16 +87,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
 
   if (!isOpen) return null;
 
-  // Apply a quick preset
-  const handleApplyPreset = (preset: typeof POPULAR_PART_PRESETS[0]) => {
-    setName(preset.name);
-    setCategory(preset.category);
-    if (preset.typicalBrand && !brand) setBrand(preset.typicalBrand);
-    if (preset.typicalCost && !purchasePrice) setPurchasePrice(String(preset.typicalCost));
-    if (preset.typicalSell && !sellingPrice) setSellingPrice(String(preset.typicalSell));
-    if (!quantity) setQuantity('10');
-  };
-
+  // Live calculations
   const costNum = parseFloat(purchasePrice) || 0;
   const sellNum = parseFloat(sellingPrice) || 0;
   const profitPerPiece = sellNum - costNum;
@@ -126,9 +98,13 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
     setFormError('');
 
     if (!name.trim()) {
-      setFormError('Please enter the spare part product name.');
+      setFormError('Please enter the product name.');
       return;
     }
+
+    const finalCategory = isCustomCategory
+      ? customCategoryText.trim() || 'General'
+      : category;
 
     const qty = parseInt(quantity, 10);
     const purchase = parseFloat(purchasePrice);
@@ -153,7 +129,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
     onSave({
       name: name.trim(),
       brand: brand.trim() || undefined,
-      category,
+      category: finalCategory,
       quantity: qty,
       purchasePrice: purchase,
       sellingPrice: selling,
@@ -182,12 +158,12 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
             </div>
             <div>
               <h3 className="font-bold text-slate-900 text-base">
-                {productToEdit ? 'Edit Spare Part Details' : 'Add Auto Spare Part to Stock'}
+                {productToEdit ? 'Edit Product Details' : 'Add Product to Inventory'}
               </h3>
               <p className="text-[11px] text-slate-500">
                 {productToEdit
-                  ? 'Update cost, selling price, or inventory count.'
-                  : 'Enter part information to track in inventory and sell on invoices.'}
+                  ? 'Update cost, selling rate, or stock count.'
+                  : 'Enter product details to track in inventory and record sales.'}
               </p>
             </div>
           </div>
@@ -199,32 +175,6 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
             <X className="w-5 h-5" />
           </button>
         </div>
-
-        {/* Quick Presets (Only in Add mode) */}
-        {!productToEdit && (
-          <div className="px-6 pt-4 pb-2 bg-slate-50/50 border-b border-slate-100">
-            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-              <Sparkles className="w-3 h-3 text-amber-500" />
-              <span>Quick Auto-Fill Common Parts:</span>
-            </div>
-            <div className="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto pb-1">
-              {POPULAR_PART_PRESETS.map((preset) => (
-                <button
-                  key={preset.name}
-                  type="button"
-                  onClick={() => handleApplyPreset(preset)}
-                  className={`text-[11px] px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
-                    name === preset.name
-                      ? 'bg-emerald-600 text-white border-emerald-600 font-bold'
-                      : 'bg-white text-slate-700 border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/40'
-                  }`}
-                >
-                  {preset.name}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
@@ -238,10 +188,10 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
             </div>
           )}
 
-          {/* Part Name */}
+          {/* Product Name */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Spare Part Name <span className="text-rose-500">*</span>
+              Product Name <span className="text-rose-500">*</span>
             </label>
             <input
               id="part-name-input"
@@ -250,56 +200,64 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
               autoFocus
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Front Brake Disc Rotor / Oil Filter"
+              placeholder="e.g. Wireless Mouse, Cotton T-Shirt, Cooking Oil, etc."
               className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white"
             />
           </div>
 
-          {/* Brand & Category */}
+          {/* Brand / Supplier & Category */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Brand / Manufacturer (Optional)
+                Brand / Supplier (Optional)
               </label>
               <input
                 id="part-brand-input"
                 type="text"
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
-                placeholder="e.g. Toyota Genuine, Bosch"
+                placeholder="e.g. Supplier name or Brand"
                 className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white"
               />
-              {/* Quick brand chips */}
-              <div className="flex flex-wrap gap-1 mt-1.5">
-                {QUICK_BRANDS.slice(0, 5).map((b) => (
-                  <button
-                    key={b}
-                    type="button"
-                    onClick={() => setBrand(b)}
-                    className="text-[10px] text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 px-1.5 py-0.5 rounded cursor-pointer transition-colors"
-                  >
-                    {b}
-                  </button>
-                ))}
-              </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Category <span className="text-rose-500">*</span>
-              </label>
-              <select
-                id="part-category-select"
-                value={category}
-                onChange={(e) => setCategory(e.target.value as CategoryType)}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white"
-              >
-                {CATEGORIES.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-xs font-semibold text-slate-700">
+                  Category <span className="text-rose-500">*</span>
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setIsCustomCategory(!isCustomCategory)}
+                  className="text-[11px] text-emerald-600 hover:text-emerald-700 font-semibold cursor-pointer"
+                >
+                  {isCustomCategory ? 'Use standard list' : '+ Custom category'}
+                </button>
+              </div>
+
+              {isCustomCategory ? (
+                <input
+                  type="text"
+                  required
+                  value={customCategoryText}
+                  onChange={(e) => setCustomCategoryText(e.target.value)}
+                  placeholder="Type custom category name..."
+                  className="w-full px-3 py-2 bg-slate-50 border border-emerald-400 rounded-xl text-xs text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white"
+                />
+              ) : (
+                <select
+                  id="part-category-select"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white"
+                >
+                  {DEFAULT_CATEGORIES.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
           </div>
 
@@ -307,7 +265,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Stock Quantity (Pieces) <span className="text-rose-500">*</span>
+                Stock Quantity (Units) <span className="text-rose-500">*</span>
               </label>
               <input
                 id="part-quantity-input"
@@ -323,7 +281,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Low Stock Alert (Pieces)
+                Low Stock Alert (Units)
               </label>
               <input
                 id="part-threshold-input"
@@ -344,7 +302,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Purchase Price (Cost / piece) <span className="text-rose-500">*</span>
+                Purchase Price (Cost / unit) <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <span className="absolute left-3 top-2 text-xs font-bold text-slate-400">Rs</span>
@@ -356,7 +314,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
                   required
                   value={purchasePrice}
                   onChange={(e) => setPurchasePrice(e.target.value)}
-                  placeholder="3500"
+                  placeholder="500"
                   className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white font-mono"
                 />
               </div>
@@ -364,7 +322,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Selling Price (Rate / piece) <span className="text-rose-500">*</span>
+                Selling Price (Rate / unit) <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <span className="absolute left-3 top-2 text-xs font-bold text-slate-400">Rs</span>
@@ -376,7 +334,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
                   required
                   value={sellingPrice}
                   onChange={(e) => setSellingPrice(e.target.value)}
-                  placeholder="4800"
+                  placeholder="750"
                   className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white font-mono"
                 />
               </div>
@@ -388,7 +346,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
             <div className="p-3 bg-emerald-50/70 border border-emerald-200 rounded-xl flex items-center justify-between text-xs">
               <div className="flex items-center gap-1.5 text-emerald-900 font-semibold">
                 <Percent className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Estimated Profit Per Piece:</span>
+                <span>Estimated Profit Per Unit:</span>
               </div>
               <div className="text-right">
                 <span className="font-black text-emerald-700">{formatCurrency(profitPerPiece)}</span>
@@ -399,17 +357,17 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
             </div>
           )}
 
-          {/* OEM / Part Number */}
+          {/* Product Code / SKU */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Part Number / OEM Code (Optional)
+              Product Code / SKU (Optional)
             </label>
             <input
               id="part-oem-input"
               type="text"
               value={partNumber}
               onChange={(e) => setPartNumber(e.target.value)}
-              placeholder="e.g. 04465-02220 or BRK-401"
+              placeholder="e.g. SKU-1001, Barcode, or Item #"
               className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white font-mono"
             />
           </div>
@@ -429,7 +387,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
               type="submit"
               className="inline-flex items-center gap-1.5 px-5 py-2.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 rounded-xl shadow-sm hover:shadow transition-all cursor-pointer"
             >
-              <Check className="w-4 h-4" />
+              <Boxes className="w-4 h-4" />
               <span>{productToEdit ? 'Save Changes' : 'Add to Inventory'}</span>
             </button>
           </div>

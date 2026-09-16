@@ -213,7 +213,7 @@ export const SalesView: React.FC<SalesViewProps> = ({
           <div className="lg:col-span-7 bg-white rounded-2xl p-6 border border-slate-200 shadow-xs">
             <h2 className="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
               <ShoppingCart className="w-4 h-4 text-emerald-600" />
-              <span>Record Auto Spare Part Sale</span>
+              <span>Record Sale Transaction</span>
             </h2>
 
             {/* Error banner */}
@@ -256,7 +256,7 @@ export const SalesView: React.FC<SalesViewProps> = ({
                 <Boxes className="w-8 h-8 text-slate-400 mx-auto mb-2" />
                 <h3 className="text-sm font-bold text-slate-700">Your Inventory is Empty</h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  You need to add spare parts to your shop inventory before you can record sales.
+                  You need to add products to your shop inventory before you can record sales.
                 </p>
                 {onOpenAddProduct && (
                   <button
@@ -266,7 +266,7 @@ export const SalesView: React.FC<SalesViewProps> = ({
                     className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs cursor-pointer transition-colors"
                   >
                     <Plus className="w-4 h-4" />
-                    <span>Add First Spare Part</span>
+                    <span>Add First Product</span>
                   </button>
                 )}
               </div>
@@ -276,7 +276,7 @@ export const SalesView: React.FC<SalesViewProps> = ({
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <label className="block text-xs font-semibold text-slate-700">
-                      Select Spare Part From Your Inventory <span className="text-rose-500">*</span>
+                      Select Product From Your Inventory <span className="text-rose-500">*</span>
                     </label>
                     {onOpenAddProduct && (
                       <button
@@ -286,7 +286,7 @@ export const SalesView: React.FC<SalesViewProps> = ({
                         className="text-[11px] text-emerald-600 hover:text-emerald-700 font-bold flex items-center gap-1 cursor-pointer"
                       >
                         <Plus className="w-3 h-3" />
-                        <span>Add New Part</span>
+                        <span>Add New Product</span>
                       </button>
                     )}
                   </div>

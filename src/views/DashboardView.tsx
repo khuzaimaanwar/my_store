@@ -75,7 +75,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 Welcome! Add your first product to get started.
               </h2>
               <p className="text-xs text-slate-600 mt-0.5">
-                Your shop starts completely fresh. Add auto parts to begin tracking inventory, stock values, and invoices.
+                Your shop starts completely fresh. Add products to begin tracking inventory, stock values, and invoices.
               </p>
             </div>
           </div>
@@ -114,7 +114,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
             Welcome back, <span className="font-semibold text-slate-700">{user.fullName}</span>.
-            Here is your live auto spare parts performance.
+            Here is your live inventory performance.
           </p>
         </div>
 
@@ -126,7 +126,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all cursor-pointer"
           >
             <PlusCircle className="w-4 h-4 text-slate-600" />
-            <span>Add Part</span>
+            <span>Add Product</span>
           </button>
           <button
             id="dash-new-sale-btn"
@@ -328,7 +328,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 No products in inventory yet.
               </p>
               <p className="text-xs text-slate-500 mt-0.5">
-                Once you add spare parts to your inventory, items falling below their low-stock threshold will alert you here.
+                Once you add products to your inventory, items falling below their low-stock threshold will alert you here.
               </p>
             </div>
           </div>
@@ -342,7 +342,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 All items sufficiently stocked. Great job!
               </p>
               <p className="text-xs text-emerald-700 mt-0.5">
-                Every spare part in your shop has quantity above its configured low-stock threshold.
+                Every product in your shop has quantity above its configured low-stock threshold.
               </p>
             </div>
           </div>
@@ -412,7 +412,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div>
             <h3 className="text-base font-bold text-slate-900">Stock Value by Category</h3>
             <p className="text-xs text-slate-500 mb-3">
-              Total capital invested across auto spare parts categories
+              Total capital invested across product categories
             </p>
           </div>
 
@@ -420,16 +420,16 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
       </div>
 
-      {/* Bottom Section: Top Selling Parts & Recent Sales */}
+      {/* Bottom Section: Top Selling Products & Recent Sales */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Top Selling Parts (5 Cols) */}
+        {/* Top Selling Products (5 Cols) */}
         <div className="lg:col-span-5 bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-xs">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
                 <Award className="w-4 h-4" />
               </div>
-              <h3 className="text-base font-bold text-slate-900">Top Selling Parts</h3>
+              <h3 className="text-base font-bold text-slate-900">Top Selling Products</h3>
             </div>
             <span className="text-xs text-slate-400">Best 5</span>
           </div>

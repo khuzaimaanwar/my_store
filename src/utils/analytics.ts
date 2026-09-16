@@ -7,7 +7,7 @@ import {
   TopSellingItem,
   CategoryType,
 } from '../types';
-import { CATEGORY_COLORS } from './formatters';
+import { getCategoryColor } from './formatters';
 
 export function calculateDashboardStats(products: Product[], sales: Sale[]): DashboardStats {
   const totalItems = products.length;
@@ -127,7 +127,7 @@ export function calculateStockByCategory(products: Product[]): CategoryStockData
       quantity: data.quantity,
       itemCount: data.count,
       percentage: Math.round(percentage * 10) / 10,
-      color: CATEGORY_COLORS[category] || '#64748B',
+      color: getCategoryColor(category),
     });
   });
 

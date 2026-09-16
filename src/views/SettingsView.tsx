@@ -59,7 +59,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
     setCloudFeedback(null);
     try {
       const res = await FirebaseService.migrateLocalDataToCloud(user.id, products, sales);
-      setCloudFeedback(`Successfully synced ${res.productsImported} spare parts and ${res.salesImported} invoices to Firebase Firestore!`);
+      setCloudFeedback(`Successfully synced ${res.productsImported} products and ${res.salesImported} invoices to Firebase Firestore!`);
       onRefreshData();
     } catch (err: any) {
       setCloudFeedback(`Cloud sync note: ${err.message || 'Data is already up to date.'}`);
@@ -256,7 +256,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
         <p className="text-xs text-slate-600 leading-relaxed">
           Your shop is registered with ID <code className="font-mono text-emerald-700 font-bold bg-slate-100 px-1.5 py-0.5 rounded">{user.id}</code>.
-          All spare parts, low-stock thresholds, customer records, and invoice counters are strictly isolated to your account.
+          All products, low-stock thresholds, customer records, and invoice counters are strictly isolated to your account.
         </p>
 
         {/* Registered Users List */}
@@ -349,7 +349,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               <span className="font-semibold">Firestore Database</span>
             </div>
             <p className="font-mono text-[11px] text-slate-800 truncate" title="Enterprise Mode">
-              AutoStock Pro Cloud DB
+              StockPro Cloud DB
             </p>
             <span className="text-[10px] text-slate-400">Live multi-device sync</span>
           </div>

@@ -1,27 +1,19 @@
-export type CategoryType =
-  | 'Engine'
-  | 'Brakes'
-  | 'Electrical'
-  | 'Body Parts'
-  | 'Filters'
-  | 'Fluids'
-  | 'Suspension'
-  | 'Transmission'
-  | 'Accessories'
-  | 'Other';
+export type CategoryType = string;
 
-export const CATEGORIES: CategoryType[] = [
-  'Engine',
-  'Brakes',
-  'Electrical',
-  'Body Parts',
-  'Filters',
-  'Fluids',
-  'Suspension',
-  'Transmission',
+export const DEFAULT_CATEGORIES: string[] = [
+  'General',
+  'Electronics',
+  'Grocery',
+  'Clothing',
   'Accessories',
+  'Beverages',
+  'Pharmacy',
+  'Stationery',
+  'Hardware',
   'Other',
 ];
+
+export const CATEGORIES: string[] = DEFAULT_CATEGORIES;
 
 export interface User {
   id: string;

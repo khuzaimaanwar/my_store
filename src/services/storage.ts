@@ -53,9 +53,9 @@ function initStorage() {
   if (users.length === 0) {
     const defaultUser: StoredUserAccount = {
       id: 'user_shop_owner',
-      fullName: 'Shop Owner',
-      shopName: 'Auto Parts Store',
-      email: 'owner@autostock.com',
+      fullName: 'Store Owner',
+      shopName: 'My Store',
+      email: 'owner@stockpro.com',
       passwordHash: 'password123',
       createdAt: new Date().toISOString(),
       phone: '',

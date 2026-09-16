@@ -3,7 +3,7 @@ import { FirebaseService } from '../services/firebase';
 import { StorageService } from '../services/storage';
 import { User } from '../types';
 import {
-  Wrench,
+  Boxes,
   Store,
   Mail,
   Lock,
@@ -79,7 +79,7 @@ export const AuthView: React.FC<AuthViewProps> = ({ onLoginSuccess }) => {
       return;
     }
     if (!shopName.trim()) {
-      setErrorMsg('Shop Name is required (e.g. Al-Madina Auto Spare Parts).');
+      setErrorMsg('Shop Name is required (e.g. Metro Supermarket, City Pharmacy, Fashion Hub).');
       return;
     }
     if (!signupEmail.trim()) {
@@ -156,13 +156,13 @@ export const AuthView: React.FC<AuthViewProps> = ({ onLoginSuccess }) => {
       {/* Brand Header */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-slate-900 text-white shadow-lg mb-3">
-          <Wrench className="w-8 h-8 text-emerald-400" />
+          <Boxes className="w-8 h-8 text-emerald-400" />
         </div>
         <h1 className="text-3xl font-black text-slate-900 tracking-tight">
-          AutoStock <span className="text-emerald-600">PRO</span>
+          StockPro <span className="text-emerald-600">POS</span>
         </h1>
         <p className="mt-1 text-sm text-slate-600 font-medium">
-          Auto Spare Parts Inventory & Sales Management
+          Smart Inventory & Point of Sale Management System
         </p>
         <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
           <Cloud className="w-3.5 h-3.5" />
@@ -354,7 +354,7 @@ export const AuthView: React.FC<AuthViewProps> = ({ onLoginSuccess }) => {
                     required
                     value={shopName}
                     onChange={(e) => setShopName(e.target.value)}
-                    placeholder="e.g. Al-Madina Auto Spare Parts"
+                    placeholder="e.g. Metro Supermarket, City Pharmacy, Fashion Hub"
                     className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
                   />
                 </div>

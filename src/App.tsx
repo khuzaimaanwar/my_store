@@ -1,5 +1,5 @@
 /**
- * AutoStock Pro - Inventory and Sales Management System for Auto Spare Parts Shops
+ * StockPro - Universal Inventory and Sales Management System
  * Multi-user with isolated private data per shop account.
  * Cloud-backed with Google Cloud Firestore & Firebase Auth.
  */
@@ -57,8 +57,8 @@ export default function App() {
           } else {
             const fallbackUser: User = {
               id: fbUser.uid,
-              fullName: fbUser.displayName || 'Shop Owner',
-              shopName: 'Auto Parts Store',
+              fullName: fbUser.displayName || 'Store Owner',
+              shopName: fbUser.displayName ? `${fbUser.displayName}'s Store` : 'My Store',
               email: fbUser.email || '',
               createdAt: new Date().toISOString(),
             };
@@ -187,7 +187,7 @@ export default function App() {
     const localProduct = StorageService.addProduct(currentUser.id, item);
     setProducts((prev) => [localProduct, ...prev]);
     setIsAddProductOpen(false);
-    setSuccessToast(`Spare part "${localProduct.name}" saved to cloud inventory!`);
+    setSuccessToast(`Product "${localProduct.name}" saved to cloud inventory!`);
     setTimeout(() => {
       setSuccessToast(null);
     }, 4000);
